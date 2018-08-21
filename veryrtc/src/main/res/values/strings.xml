@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">webrtcpeerandroid</string>
+    <string name="camera2_texture_only_error">Camera2 only supports capturing to texture. Either disable Camera2 or enable capturing to texture in the options.</string>
+</resources>
