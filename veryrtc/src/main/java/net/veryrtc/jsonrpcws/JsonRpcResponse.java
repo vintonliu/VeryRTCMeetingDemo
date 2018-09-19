@@ -22,8 +22,8 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2ParseException;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 
 public class JsonRpcResponse {
-	private JsonRpcResponseError error;
-	private JSONRPC2Response response;
+	private JsonRpcResponseError error = null;
+	private JSONRPC2Response response = null;
 
 	public JsonRpcResponse(String jsonString) {
 		try {
@@ -38,6 +38,14 @@ public class JsonRpcResponse {
 			response = null;
 			e.printStackTrace();
 		}
+	}
+
+	public JsonRpcResponse(final JSONRPC2Response response) {
+		this.response = response;
+	}
+
+	public JsonRpcResponse(final JSONRPC2Error error) {
+		this.error = new JsonRpcResponseError(error.getCode(), error.getData());
 	}
 
 	public Object getId() {

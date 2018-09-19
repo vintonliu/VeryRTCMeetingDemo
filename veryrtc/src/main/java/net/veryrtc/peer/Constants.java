@@ -15,6 +15,8 @@ class Constants {
     public static final String AUDIO_CODEC_OPUS = "opus";
     public static final String AUDIO_CODEC_ISAC = "ISAC";
     public static final String VIDEO_CODEC_PARAM_START_BITRATE = "x-google-start-bitrate";
+    public static final String VIDEO_CODEC_PARAM_MAX_BITRATE = "x-google-max-bitrate";
+    public static final String VIDEO_CODEC_PARAM_MIN_BITRATE = "x-google-min-bitrate";
     public static final String VIDEO_FLEXFEC_FIELDTRIAL =
                             "WebRTC-FlexFEC-03-Advertised/Enabled/WebRTC-FlexFEC-03/Enabled/";
     public static final String VIDEO_VP8_INTEL_HW_ENCODER_FIELDTRIAL = "WebRTC-IntelVP8/Enabled/";

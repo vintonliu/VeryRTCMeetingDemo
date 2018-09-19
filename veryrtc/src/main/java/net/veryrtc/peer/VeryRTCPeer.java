@@ -296,7 +296,9 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
         public final int videoWidth;
         public final int videoHeight;
         public final int videoFps;
-        public final int videoMaxBitrate;
+        public final int videoMaxBitrateKbps;
+        public final int videoStartBitrateKbps;
+        public final int videoMinBitrateKbps;
         public final String videoCodec;
         public final boolean videoCodecHwAcceleration;
         public final boolean videoFlexfecEnabled;
@@ -324,7 +326,7 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
          * videoWidth 640 <br>
          * videoHeight 480 <br>
          * videoFps 15 fps <br>
-         * videoMaxBitrate 1000 <br>
+         * videoMaxBitrateKbps 1000 <br>
          * videoCodec H264 <br>
          * videoCodecHwAcceleration false <br>
          * videoFlexfecEnabled true <br>
@@ -350,7 +352,9 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
             videoWidth = 640;
             videoHeight = 480;
             videoFps = 15;
-            videoMaxBitrate = 1000;
+            videoMaxBitrateKbps = 1000;
+            videoMinBitrateKbps = 150;
+            videoStartBitrateKbps = 300;
             videoCodec = Constants.VIDEO_CODEC_H264;
             videoCodecHwAcceleration = false;
             videoFlexfecEnabled = true;
@@ -371,7 +375,8 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
 
         public PeerConnectionParameters(
                 boolean videoCallEnable, boolean loopback, boolean tracing,
-                int videoWidth, int videoHeight, int videoFps, int videoMaxBitrate,
+                int videoWidth, int videoHeight, int videoFps, int videoMaxBitrateKbps,
+                int videoMinBitrateKbps, int videoStartBitrateKbps,
                 String videoCodec, boolean videoCodecHwAcceleration, boolean videoFlexfecEnabled,
                 boolean useCamera2, VeryRTCPeerConfiguration.NBMCameraPosition cameraPosition,
                 int audioStartBitrate, String audioCodec,
@@ -385,7 +390,9 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
             this.videoWidth = videoWidth;
             this.videoHeight = videoHeight;
             this.videoFps = videoFps;
-            this.videoMaxBitrate = videoMaxBitrate;
+            this.videoMaxBitrateKbps = videoMaxBitrateKbps;
+            this.videoStartBitrateKbps = videoStartBitrateKbps;
+            this.videoMinBitrateKbps = videoMinBitrateKbps;
             this.videoCodec = videoCodec;
             this.videoCodecHwAcceleration = videoCodecHwAcceleration;
             this.videoFlexfecEnabled = videoFlexfecEnabled;
@@ -1167,8 +1174,8 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
             observer.onLocalSdpOfferGenerated(localSdpOffer, connection.getConnectionId());
         }
 
-        if (peerConnectionParameters.videoMaxBitrate > 0) {
-            connection.setVideoMaxBitrate(peerConnectionParameters.videoMaxBitrate);
+        if (peerConnectionParameters.videoMaxBitrateKbps > 0) {
+            connection.setVideoMaxBitrate(peerConnectionParameters.videoMaxBitrateKbps);
         }
     }
 
@@ -1183,8 +1190,8 @@ public class VeryRTCPeer implements VRPeerConnection.Observer {
         synchronized (observer) {
             observer.onLocalSdpAnswerGenerated(localSdpAnswer, connection.getConnectionId());
         }
-        if (peerConnectionParameters.videoMaxBitrate > 0) {
-            connection.setVideoMaxBitrate(peerConnectionParameters.videoMaxBitrate);
+        if (peerConnectionParameters.videoMaxBitrateKbps > 0) {
+            connection.setVideoMaxBitrate(peerConnectionParameters.videoMaxBitrateKbps);
         }
     }
 

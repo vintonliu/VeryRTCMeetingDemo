@@ -101,8 +101,14 @@ public class JsonRpcWebSocketClient {
 								notification.setPositionalParams(((JSONRPC2Notification) msg).getPositionalParams());
 								events.onNotification(notification);
 							} else if (msg instanceof JSONRPC2Response) {
-								JsonRpcResponse notification = new JsonRpcResponse(message);
-								events.onResponse(notification);
+								JsonRpcResponse response;
+								if (((JSONRPC2Response) msg).indicatesSuccess()) {
+									response = new JsonRpcResponse(((JSONRPC2Response) msg));
+								} else {
+									response = new JsonRpcResponse(((JSONRPC2Response) msg).getError());
+								}
+
+								events.onResponse(response);
 							}
 						} catch (JSONRPC2ParseException e) {
 							// TODO: Handle exception

@@ -329,11 +329,15 @@ class VRPeerConnection implements PeerConnection.Observer, SdpObserver {
         if (videoCallEnable) {
             sdpDescription = preferCodec(sdpDescription, preferredVideoCodec, false);
         }
-//        if (videoCallEnable && peerConnectionParameters.videoStartBitrate > 0) {
-//            sdpDescription = setStartBitrate(Constants.VIDEO_CODEC_VP8, true, sdpDescription, peerConnectionParameters.videoStartBitrate);
-//            sdpDescription = setStartBitrate(Constants.VIDEO_CODEC_VP9, true, sdpDescription, peerConnectionParameters.videoStartBitrate);
-//            sdpDescription = setStartBitrate(Constants.VIDEO_CODEC_H264, true, sdpDescription, peerConnectionParameters.videoStartBitrate);
-//        }
+
+        if (videoCallEnable) {
+            sdpDescription = setStartBitrate(Constants.VIDEO_CODEC_VP8, true,
+                    sdpDescription, peerConnectionParameters.videoStartBitrateKbps);
+            sdpDescription = setStartBitrate(Constants.VIDEO_CODEC_VP9, true,
+                    sdpDescription, peerConnectionParameters.videoStartBitrateKbps);
+            sdpDescription = setStartBitrate(Constants.VIDEO_CODEC_H264, true,
+                    sdpDescription, peerConnectionParameters.videoStartBitrateKbps);
+        }
 
         if (peerConnectionParameters.audioStartBitrate > 0) {
             sdpDescription = setStartBitrate(Constants.AUDIO_CODEC_OPUS, false, sdpDescription, peerConnectionParameters.audioStartBitrate);
@@ -386,7 +390,7 @@ class VRPeerConnection implements PeerConnection.Observer, SdpObserver {
      * @param bitrateKbps
      * @return
      */
-    private static String setStartBitrate(String codec, boolean isVideoCodec, String sdpDescription, int bitrateKbps) {
+    private String setStartBitrate(String codec, boolean isVideoCodec, String sdpDescription, int bitrateKbps) {
         String[] lines = sdpDescription.split("\r\n");
         int rtpmapLineIndex = -1;
         boolean sdpFormatUpdated = false;
@@ -418,6 +422,8 @@ class VRPeerConnection implements PeerConnection.Observer, SdpObserver {
                 Log.d(TAG, "Found " + codec + " " + lines[i]);
                 if (isVideoCodec) {
                     lines[i] += "; " + Constants.VIDEO_CODEC_PARAM_START_BITRATE + "=" + bitrateKbps;
+                    lines[i] += "; " + Constants.VIDEO_CODEC_PARAM_MIN_BITRATE + "=" + peerConnectionParameters.videoMinBitrateKbps;
+                    lines[i] += "; " + Constants.VIDEO_CODEC_PARAM_MAX_BITRATE + "=" + peerConnectionParameters.videoMaxBitrateKbps;
                 } else {
                     lines[i] += "; " + Constants.AUDIO_CODEC_PARAM_BITRATE + "=" + (bitrateKbps * 1000);
                 }
@@ -434,6 +440,8 @@ class VRPeerConnection implements PeerConnection.Observer, SdpObserver {
                 String bitrateSet;
                 if (isVideoCodec) {
                     bitrateSet = "a=fmtp:" + codecRtpMap + " " + Constants.VIDEO_CODEC_PARAM_START_BITRATE + "=" + bitrateKbps;
+                    bitrateSet += "; " + Constants.VIDEO_CODEC_PARAM_MIN_BITRATE + "=" + peerConnectionParameters.videoMinBitrateKbps;
+                    bitrateSet += "; " + Constants.VIDEO_CODEC_PARAM_MAX_BITRATE + "=" + peerConnectionParameters.videoMaxBitrateKbps;
                 } else {
                     bitrateSet = "a=fmtp:" + codecRtpMap + " " + Constants.AUDIO_CODEC_PARAM_BITRATE + "=" + (bitrateKbps * 1000);
                 }

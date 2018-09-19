@@ -175,7 +175,7 @@ public class VeryRTCPeerConfiguration {
      * audioStartBitrate unlimited <br>
      * videoCodec H264 <br>
      * videoHwCodecEnable false <br>
-     * videoMaxBitrate unlimited <br>
+     * videoMaxBitrateKbps unlimited <br>
      * videoCaptureFormat <br>
      * width 640 <br>
      * height 480 <br>
